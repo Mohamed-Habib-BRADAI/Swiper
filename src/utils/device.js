@@ -14,6 +14,7 @@ const Device = (function Device() {
     ipad: false,
     cordova: window.cordova || window.phonegap,
     phonegap: window.cordova || window.phonegap,
+    safari: false,
   };
 
   const windows = ua.match(/(Windows Phone);?[\s\/]+([\d.]+)?/); // eslint-disable-line
@@ -21,7 +22,7 @@ const Device = (function Device() {
   const ipad = ua.match(/(iPad).*OS\s([\d_]+)/);
   const ipod = ua.match(/(iPod)(.*OS\s([\d_]+))?/);
   const iphone = !ipad && ua.match(/(iPhone\sOS|iOS)\s([\d_]+)/);
-
+  const safari = ua.match(/^((?!chrome|android).)*safari/i);
 
   // Windows
   if (windows) {
@@ -58,6 +59,9 @@ const Device = (function Device() {
     if (device.osVersion.split('.')[0] === '10') {
       device.osVersion = ua.toLowerCase().split('version/')[1].split(' ')[0];
     }
+  }
+  if (safari) {
+    device.safari = true;
   }
 
   // Desktop

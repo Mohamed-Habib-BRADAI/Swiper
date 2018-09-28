@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: September 14, 2018
+ * Released on: October 4, 2018
  */
 
 (function (global, factory) {
@@ -2552,6 +2552,7 @@
       ipad: false,
       cordova: win.cordova || win.phonegap,
       phonegap: win.cordova || win.phonegap,
+      safari: false,
     };
 
     var windows = ua.match(/(Windows Phone);?[\s\/]+([\d.]+)?/); // eslint-disable-line
@@ -2559,7 +2560,7 @@
     var ipad = ua.match(/(iPad).*OS\s([\d_]+)/);
     var ipod = ua.match(/(iPod)(.*OS\s([\d_]+))?/);
     var iphone = !ipad && ua.match(/(iPhone\sOS|iOS)\s([\d_]+)/);
-
+    var safari = ua.match(/^((?!chrome|android).)*safari/i);
 
     // Windows
     if (windows) {
@@ -2596,6 +2597,9 @@
       if (device.osVersion.split('.')[0] === '10') {
         device.osVersion = ua.toLowerCase().split('version/')[1].split(' ')[0];
       }
+    }
+    if (safari) {
+      device.safari = true;
     }
 
     // Desktop
@@ -7748,6 +7752,197 @@
     },
   };
 
+  function getOffset(swiper, slide, translate, scale, slideWidth) {
+    return Math.abs(translate * (-1) - slide[0].swiperSlideOffset + ((((100 - slideWidth) / 100) * swiper.width) / 2));
+  }
+
+  function getOffsetBounds(swiper) {
+    return {
+      small: swiper.width * 0.05,
+      intermediate: swiper.width * 0.2,
+    };
+  }
+
+  function getScale(index, closestIndex, scale, offset, offsetBounds, interpolate) {
+    if ( interpolate === void 0 ) interpolate = false;
+
+    if (index === closestIndex) {
+      if (offset < offsetBounds.small) {
+        return scale;
+      }
+      if (interpolate && offset < offsetBounds.intermediate) {
+        return scale - (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (scale - 1));
+      }
+      return 1;
+    }
+    return 1;
+  }
+
+  function getOpacity(index, closestIndex, opacity, offset, offsetBounds, interpolate) {
+    if ( interpolate === void 0 ) interpolate = false;
+
+    if (index === closestIndex) {
+      if (offset < offsetBounds.small) {
+        return 1;
+      }
+      if (interpolate && offset < offsetBounds.intermediate) {
+        return 1 - (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * opacity);
+      }
+      return opacity;
+    }
+    return opacity;
+  }
+
+  function animationStep(timestamp, start, callback, duration) {
+    if ( duration === void 0 ) duration = 300;
+
+    var progress = timestamp - start;
+    if (progress < duration) {
+      callback(progress / duration);
+      window.requestAnimationFrame(function (time) { return animationStep(time, start, callback); });
+    }
+  }
+
+  function animate$1(callback, easingFunction, duration) {
+    if ( easingFunction === void 0 ) easingFunction = function (t) { return t * (2 - t); };
+    if ( duration === void 0 ) duration = 300;
+
+    var start = window.performance.now();
+    return window.requestAnimationFrame(function (time) { return animationStep(time, start, function (progress) { return callback(easingFunction(progress)); }, duration); });
+  }
+
+  function getTranslateXY(transform) {
+    var transArr = [];
+    var mat = transform.match(/^matrix3d\((.+)\)$/);
+    if (mat) {
+      return parseFloat(mat[1].split(', ')[13]);
+    }
+    mat = transform.match(/^matrix\((.+)\)$/);
+    if (mat) {
+      transArr.push(parseFloat(mat[1].split(', ')[4]));
+      transArr.push(parseFloat(mat[1].split(', ')[5]));
+    }
+    return transArr;
+  }
+
+  var Float = {
+    setTranslate: function setTranslate() {
+      var swiper = this;
+      var translate = swiper.translate;
+      var params = swiper.params.floatEffect;
+      var initialTranslate = getTranslateXY(swiper.$wrapperEl.css('transform'))[0];
+      var transition = parseInt(swiper.$wrapperEl[0].style.transitionDuration, 10);
+      var slides = Array.from(swiper.slides).map(function (slide, index) { return swiper.slides.eq(index); });
+      var closestIndex = slides.reduce(function (result, slide, index) {
+        var lastValue = Math.abs(translate * (-1) - slides[result][0].swiperSlideOffset);
+        var currentValue = Math.abs(translate * (-1) - slides[index][0].swiperSlideOffset);
+        return currentValue < lastValue ? index : result;
+      }, 0);
+
+      if (!transition || (!Device.ios)) {
+        if (Support.transforms3d) {
+          swiper.$wrapperEl.transform(("translate3d(" + translate + "px, " + (0) + "px, " + (0) + "px)"));
+        } else {
+          swiper.$wrapperEl.transform(("translate(" + translate + "px, " + (0) + "px)"));
+        }
+
+        var offsetBounds = getOffsetBounds(swiper);
+
+        slides.forEach(function (slide, index) {
+          var offset = getOffset(swiper, slide, translate, params.scale, params.slideWidth);
+          var scale = getScale(index, closestIndex, params.scale, offset, offsetBounds, Device.ios);
+          var opacity = getOpacity(index, closestIndex, params.opacity, offset, offsetBounds, Device.ios);
+          slide.transform(("scale(" + scale + ") translateZ(0)"));
+          slide.css('opacity', opacity);
+        });
+      } else {
+        var styles = slides.map(function (slide) { return ({
+          scale: slide[0].getBoundingClientRect().width / slide[0].offsetWidth,
+          opacity: parseFloat(window.getComputedStyle(slide[0]).opacity),
+        }); });
+
+        var translateDelta = translate - initialTranslate;
+        animate$1(function (progress) {
+          swiper.$wrapperEl.transform(("translateX(" + (initialTranslate + (translateDelta * progress)) + "px)"));
+          slides.forEach(function (slide, index) {
+            var ref = styles[index];
+            var scale = ref.scale;
+            var opacity = ref.opacity;
+            if (index === closestIndex) {
+              slide.transform(("scale(" + (scale + ((params.scale - scale) * progress)) + ") translateZ(0)"));
+              slide.css('opacity', opacity + ((1 - opacity) * progress));
+            } else {
+              if (scale > 1) {
+                slide.transform(("scale(" + (scale - (progress * (scale - 1))) + ") translateZ(0)"));
+              }
+              if (opacity[index] > params.opacity) {
+                slide.css('opacity', opacity - (progress * (opacity - params.opacity)));
+              }
+            }
+          });
+        });
+      }
+    }
+  };
+
+  var EffectFloat = {
+    name: 'effect-float',
+    params: {
+      floatEffect: {
+        scale: 1.07,
+        opacity: 0.5,
+        slideWidth: 82,
+      },
+    },
+    create: function create() {
+      var swiper = this;
+      Utils.extend(swiper, {
+        floatEffect: {
+          setTranslate: Float.setTranslate.bind(swiper)
+        },
+      });
+    },
+    on: {
+      beforeInit: function beforeInit() {
+        var swiper = this;
+        if (swiper.params.effect !== 'float') { return; }
+
+        swiper.classNames.push(((swiper.params.containerModifierClass) + "float"));
+        swiper.classNames.push(((swiper.params.containerModifierClass) + "3d"));
+
+        if (Device.ios) {
+          swiper.$wrapperEl.css('transition-property', 'none');
+        } else {
+          swiper.$wrapperEl.css('transition-property', 'transform, -webkit-transform');
+        }
+
+        swiper.params.watchSlidesProgress = true;
+        swiper.originalParams.watchSlidesProgress = true;
+        swiper.params.virtualTranslate = true;
+        swiper.originalParams.virtualTranslate = true;
+        swiper.params.spaceBetween = ((100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2) + "%";
+        swiper.originalParams.spaceBetween = ((100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2) + "%";
+
+        var style = document.createElement('style');
+        style.appendChild(document.createTextNode(''));
+        document.head.appendChild(style);
+        style.sheet.insertRule((".swiper-container-float .swiper-wrapper .swiper-slide {width: " + (swiper.params.floatEffect.slideWidth) + "% !important"));
+      },
+      init: function init() {
+        var swiper = this;
+        var params = swiper.params;
+        if (!Device.ios) {
+          swiper.slides.transition(params.speed);
+        }
+      },
+      setTranslate: function setTranslate() {
+        var swiper = this;
+        if (swiper.params.effect !== 'float') { return; }
+        swiper.floatEffect.setTranslate();
+      },
+    },
+  };
+
   var Thumbs = {
     init: function init() {
       var swiper = this;
@@ -7960,6 +8155,7 @@
     EffectCube,
     EffectFlip,
     EffectCoverflow,
+    EffectFloat,
     Thumbs$1
   ];
 
