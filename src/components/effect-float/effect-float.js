@@ -165,7 +165,7 @@ export default {
       const style = document.createElement('style');
       style.appendChild(document.createTextNode(''));
       document.head.appendChild(style);
-      style.sheet.insertRule(`.swiper-container-float .swiper-wrapper .swiper-slide {width: ${swiper.params.floatEffect.slideWidth}% !important`);
+      style.sheet.insertRule(`.swiper-container-float .swiper-wrapper .swiper-slide {width: ${swiper.params.floatEffect.slideWidth}% !important; }`);
     },
     init() {
       const swiper = this;

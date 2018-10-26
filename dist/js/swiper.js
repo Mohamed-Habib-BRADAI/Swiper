@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: October 4, 2018
+ * Released on: October 26, 2018
  */
 
 (function (global, factory) {
@@ -7926,7 +7926,7 @@
         var style = document.createElement('style');
         style.appendChild(document.createTextNode(''));
         document.head.appendChild(style);
-        style.sheet.insertRule((".swiper-container-float .swiper-wrapper .swiper-slide {width: " + (swiper.params.floatEffect.slideWidth) + "% !important"));
+        style.sheet.insertRule((".swiper-container-float .swiper-wrapper .swiper-slide {width: " + (swiper.params.floatEffect.slideWidth) + "% !important; }"));
       },
       init: function init() {
         var swiper = this;

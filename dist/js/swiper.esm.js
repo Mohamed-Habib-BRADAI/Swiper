@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: October 4, 2018
+ * Released on: October 26, 2018
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition, on, off, trigger, transitionEnd, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -6912,7 +6912,7 @@ var effectFloat = {
       const style = document.createElement('style');
       style.appendChild(document.createTextNode(''));
       document.head.appendChild(style);
-      style.sheet.insertRule(`.swiper-container-float .swiper-wrapper .swiper-slide {width: ${swiper.params.floatEffect.slideWidth}% !important`);
+      style.sheet.insertRule(`.swiper-container-float .swiper-wrapper .swiper-slide {width: ${swiper.params.floatEffect.slideWidth}% !important; }`);
     },
     init() {
       const swiper = this;
