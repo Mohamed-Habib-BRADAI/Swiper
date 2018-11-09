@@ -161,11 +161,6 @@ export default {
       swiper.originalParams.virtualTranslate = true;
       swiper.params.spaceBetween = `${(100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2}%`;
       swiper.originalParams.spaceBetween = `${(100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2}%`;
-
-      const style = document.createElement('style');
-      style.appendChild(document.createTextNode(''));
-      document.head.appendChild(style);
-      style.sheet.insertRule(`.swiper-container-float .swiper-wrapper .swiper-slide {width: ${swiper.params.floatEffect.slideWidth}% !important; }`);
     },
     init() {
       const swiper = this;
