@@ -3,11 +3,11 @@
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
- * Copyright 2014-2018 Vladimir Kharlampidi
+ * Copyright 2014-2019 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: October 26, 2018
+ * Released on: January 7, 2019
  */
 
 (function (global, factory) {
@@ -7892,6 +7892,7 @@
         scale: 1.07,
         opacity: 0.5,
         slideWidth: 82,
+        spaceBetweenAsPercentage: false
       },
     },
     create: function create() {
@@ -7920,13 +7921,28 @@
         swiper.originalParams.watchSlidesProgress = true;
         swiper.params.virtualTranslate = true;
         swiper.originalParams.virtualTranslate = true;
-        swiper.params.spaceBetween = ((100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2) + "%";
-        swiper.originalParams.spaceBetween = ((100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2) + "%";
+
+        var originalSpaceBetween = swiper.params.spaceBetween;
+
+        if (swiper.params.floatEffect.spaceBetweenAsPercentage) {
+          swiper.params.spaceBetween = originalSpaceBetween + "%";
+          swiper.originalParams.spaceBetween = originalSpaceBetween + "%";
+        } else {
+          swiper.params.spaceBetween = ((100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2) + "%";
+          swiper.originalParams.spaceBetween = ((100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2) + "%";
+        }
+
+        var oldStyles = document.getElementById('swiper-float-styles');
+        if (oldStyles && oldStyles.parentNode) {
+          oldStyles.parentNode.removeChild(oldStyles);
+        }
 
         var style = document.createElement('style');
+        style.setAttribute('id', 'swiper-float-styles');
         style.appendChild(document.createTextNode(''));
         document.head.appendChild(style);
         style.sheet.insertRule((".swiper-container-float .swiper-wrapper .swiper-slide {width: " + (swiper.params.floatEffect.slideWidth) + "% !important; }"));
+
       },
       init: function init() {
         var swiper = this;

@@ -131,6 +131,7 @@ export default {
       scale: 1.07,
       opacity: 0.5,
       slideWidth: 82,
+      spaceBetweenAsPercentage: false
     },
   },
   create() {
@@ -159,8 +160,28 @@ export default {
       swiper.originalParams.watchSlidesProgress = true;
       swiper.params.virtualTranslate = true;
       swiper.originalParams.virtualTranslate = true;
-      swiper.params.spaceBetween = `${(100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2}%`;
-      swiper.originalParams.spaceBetween = `${(100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2}%`;
+
+      const originalSpaceBetween = swiper.params.spaceBetween;
+
+      if (swiper.params.floatEffect.spaceBetweenAsPercentage) {
+        swiper.params.spaceBetween = `${originalSpaceBetween}%`;
+        swiper.originalParams.spaceBetween = `${originalSpaceBetween}%`;
+      } else {
+        swiper.params.spaceBetween = `${(100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2}%`;
+        swiper.originalParams.spaceBetween = `${(100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2}%`;
+      }
+
+      const oldStyles = document.getElementById('swiper-float-styles');
+      if (oldStyles && oldStyles.parentNode) {
+        oldStyles.parentNode.removeChild(oldStyles);
+      }
+
+      const style = document.createElement('style');
+      style.setAttribute('id', 'swiper-float-styles');
+      style.appendChild(document.createTextNode(''));
+      document.head.appendChild(style);
+      style.sheet.insertRule(`.swiper-container-float .swiper-wrapper .swiper-slide {width: ${swiper.params.floatEffect.slideWidth}% !important; }`);
+
     },
     init() {
       const swiper = this;
