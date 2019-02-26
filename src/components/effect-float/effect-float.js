@@ -144,8 +144,6 @@ export default {
   },
   on: {
     beforeInit() {
-      console.log('before init');
-
       const swiper = this;
       if (swiper.params.effect !== 'float') return;
 

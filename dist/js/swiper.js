@@ -7905,8 +7905,6 @@
     },
     on: {
       beforeInit: function beforeInit() {
-        console.log('before init');
-
         var swiper = this;
         if (swiper.params.effect !== 'float') { return; }
 
