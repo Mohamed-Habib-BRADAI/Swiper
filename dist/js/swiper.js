@@ -1,5 +1,5 @@
 /**
- * Swiper 4.4.1
+ * Swiper 4.4.7
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: January 7, 2019
+ * Released on: February 26, 2019
  */
 
 (function (global, factory) {
@@ -7786,7 +7786,7 @@
         return 1;
       }
       if (interpolate && offset < offsetBounds.intermediate) {
-        return 1 - (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * opacity);
+        return 1 - (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (1 - opacity));
       }
       return opacity;
     }
@@ -7905,6 +7905,8 @@
     },
     on: {
       beforeInit: function beforeInit() {
+        console.log('before init');
+
         var swiper = this;
         if (swiper.params.effect !== 'float') { return; }
 

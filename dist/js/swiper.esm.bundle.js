@@ -1,5 +1,5 @@
 /**
- * Swiper 4.4.1
+ * Swiper 4.4.7
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: January 7, 2019
+ * Released on: February 26, 2019
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition, on, off, trigger, transitionEnd, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -6779,7 +6779,7 @@ function getOpacity(index$$1, closestIndex, opacity, offset$$1, offsetBounds, in
       return 1;
     }
     if (interpolate && offset$$1 < offsetBounds.intermediate) {
-      return 1 - (((offset$$1 - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * opacity);
+      return 1 - (((offset$$1 - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (1 - opacity));
     }
     return opacity;
   }
@@ -6891,6 +6891,8 @@ var EffectFloat = {
   },
   on: {
     beforeInit() {
+      console.log('before init');
+
       const swiper = this;
       if (swiper.params.effect !== 'float') return;
 

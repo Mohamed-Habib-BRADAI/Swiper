@@ -32,7 +32,7 @@ function getOpacity(index, closestIndex, opacity, offset, offsetBounds, interpol
       return 1;
     }
     if (interpolate && offset < offsetBounds.intermediate) {
-      return 1 - (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * opacity);
+      return 1 - (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (1 - opacity));
     }
     return opacity;
   }
@@ -144,6 +144,8 @@ export default {
   },
   on: {
     beforeInit() {
+      console.log('before init');
+
       const swiper = this;
       if (swiper.params.effect !== 'float') return;
 

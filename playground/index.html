@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Swiper Playground</title>
-    <link rel="stylesheet" href="../dist/css/swiper.min.css">
+    <link rel="stylesheet" href="../build/css/swiper.css">
     <meta name="viewport" content="width=device-width">
 </head>
 <body>
@@ -46,12 +46,13 @@
         height: 80%;
     }
     </style>
-    <script src="../dist/js/swiper.min.js"></script>
+    <script src="../build/js/swiper.js"></script>
     <script>
         var swiper = new Swiper({
             el: '.swiper-container',
             spaceBetween: 10,
             slidesPerView: 'auto',
+            loop: true,
             centeredSlides: true,
             slideToClickedSlide: true,
             grabCursor: true,
