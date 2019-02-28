@@ -75,8 +75,8 @@ const Float = {
     const transition = parseInt(swiper.$wrapperEl[0].style.transitionDuration, 10);
     const slides = Array.from(swiper.slides).map((slide, index) => swiper.slides.eq(index));
     const closestIndex = slides.reduce((result, slide, index) => {
-      const lastValue = Math.abs(translate * (-1) - slides[result][0].swiperSlideOffset);
-      const currentValue = Math.abs(translate * (-1) - slides[index][0].swiperSlideOffset);
+      const lastValue = Math.abs(translate * (-1) - (slides[result][0].swiperSlideOffset - (slides[result][0].offsetWidth / 2)));
+      const currentValue = Math.abs(translate * (-1) - (slides[index][0].swiperSlideOffset - (slides[result][0].offsetWidth / 2)));
       return currentValue < lastValue ? index : result;
     }, 0);
 

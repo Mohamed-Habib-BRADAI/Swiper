@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: February 26, 2019
+ * Released on: February 28, 2019
  */
 
 (function (global, factory) {
@@ -7834,8 +7834,8 @@
       var transition = parseInt(swiper.$wrapperEl[0].style.transitionDuration, 10);
       var slides = Array.from(swiper.slides).map(function (slide, index) { return swiper.slides.eq(index); });
       var closestIndex = slides.reduce(function (result, slide, index) {
-        var lastValue = Math.abs(translate * (-1) - slides[result][0].swiperSlideOffset);
-        var currentValue = Math.abs(translate * (-1) - slides[index][0].swiperSlideOffset);
+        var lastValue = Math.abs(translate * (-1) - (slides[result][0].swiperSlideOffset - (slides[result][0].offsetWidth / 2)));
+        var currentValue = Math.abs(translate * (-1) - (slides[index][0].swiperSlideOffset - (slides[result][0].offsetWidth / 2)));
         return currentValue < lastValue ? index : result;
       }, 0);
 

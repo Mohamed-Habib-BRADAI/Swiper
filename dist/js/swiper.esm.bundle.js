@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: February 26, 2019
+ * Released on: February 28, 2019
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition, on, off, trigger, transitionEnd, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -6822,8 +6822,8 @@ const Float = {
     const transition$$1 = parseInt(swiper.$wrapperEl[0].style.transitionDuration, 10);
     const slides = Array.from(swiper.slides).map((slide, index$$1) => swiper.slides.eq(index$$1));
     const closestIndex = slides.reduce((result, slide, index$$1) => {
-      const lastValue = Math.abs(translate * (-1) - slides[result][0].swiperSlideOffset);
-      const currentValue = Math.abs(translate * (-1) - slides[index$$1][0].swiperSlideOffset);
+      const lastValue = Math.abs(translate * (-1) - (slides[result][0].swiperSlideOffset - (slides[result][0].offsetWidth / 2)));
+      const currentValue = Math.abs(translate * (-1) - (slides[index$$1][0].swiperSlideOffset - (slides[result][0].offsetWidth / 2)));
       return currentValue < lastValue ? index$$1 : result;
     }, 0);
 
