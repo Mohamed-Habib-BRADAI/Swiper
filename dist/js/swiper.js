@@ -1,13 +1,13 @@
 /**
- * Swiper 4.4.7
+ * Swiper 4.4.8
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
- * Copyright 2014-2019 Vladimir Kharlampidi
+ * Copyright 2014-2020 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: February 28, 2019
+ * Released on: January 8, 2020
  */
 
 (function (global, factory) {
@@ -179,26 +179,22 @@
 
   // Classes and attributes
   function addClass(className) {
-    var this$1 = this;
-
     if (typeof className === 'undefined') {
       return this;
     }
     var classes = className.split(' ');
     for (var i = 0; i < classes.length; i += 1) {
       for (var j = 0; j < this.length; j += 1) {
-        if (typeof this$1[j] !== 'undefined' && typeof this$1[j].classList !== 'undefined') { this$1[j].classList.add(classes[i]); }
+        if (typeof this[j] !== 'undefined' && typeof this[j].classList !== 'undefined') { this[j].classList.add(classes[i]); }
       }
     }
     return this;
   }
   function removeClass(className) {
-    var this$1 = this;
-
     var classes = className.split(' ');
     for (var i = 0; i < classes.length; i += 1) {
       for (var j = 0; j < this.length; j += 1) {
-        if (typeof this$1[j] !== 'undefined' && typeof this$1[j].classList !== 'undefined') { this$1[j].classList.remove(classes[i]); }
+        if (typeof this[j] !== 'undefined' && typeof this[j].classList !== 'undefined') { this[j].classList.remove(classes[i]); }
       }
     }
     return this;
@@ -208,19 +204,16 @@
     return this[0].classList.contains(className);
   }
   function toggleClass(className) {
-    var this$1 = this;
-
     var classes = className.split(' ');
     for (var i = 0; i < classes.length; i += 1) {
       for (var j = 0; j < this.length; j += 1) {
-        if (typeof this$1[j] !== 'undefined' && typeof this$1[j].classList !== 'undefined') { this$1[j].classList.toggle(classes[i]); }
+        if (typeof this[j] !== 'undefined' && typeof this[j].classList !== 'undefined') { this[j].classList.toggle(classes[i]); }
       }
     }
     return this;
   }
   function attr(attrs, value) {
     var arguments$1 = arguments;
-    var this$1 = this;
 
     if (arguments.length === 1 && typeof attrs === 'string') {
       // Get attr
@@ -232,13 +225,13 @@
     for (var i = 0; i < this.length; i += 1) {
       if (arguments$1.length === 2) {
         // String
-        this$1[i].setAttribute(attrs, value);
+        this[i].setAttribute(attrs, value);
       } else {
         // Object
         // eslint-disable-next-line
         for (var attrName in attrs) {
-          this$1[i][attrName] = attrs[attrName];
-          this$1[i].setAttribute(attrName, attrs[attrName]);
+          this[i][attrName] = attrs[attrName];
+          this[i].setAttribute(attrName, attrs[attrName]);
         }
       }
     }
@@ -246,16 +239,12 @@
   }
   // eslint-disable-next-line
   function removeAttr(attr) {
-    var this$1 = this;
-
     for (var i = 0; i < this.length; i += 1) {
-      this$1[i].removeAttribute(attr);
+      this[i].removeAttribute(attr);
     }
     return this;
   }
   function data(key, value) {
-    var this$1 = this;
-
     var el;
     if (typeof value === 'undefined') {
       el = this[0];
@@ -276,7 +265,7 @@
 
     // Set value
     for (var i = 0; i < this.length; i += 1) {
-      el = this$1[i];
+      el = this[i];
       if (!el.dom7ElementDataStorage) { el.dom7ElementDataStorage = {}; }
       el.dom7ElementDataStorage[key] = value;
     }
@@ -285,23 +274,19 @@
   // Transforms
   // eslint-disable-next-line
   function transform(transform) {
-    var this$1 = this;
-
     for (var i = 0; i < this.length; i += 1) {
-      var elStyle = this$1[i].style;
+      var elStyle = this[i].style;
       elStyle.webkitTransform = transform;
       elStyle.transform = transform;
     }
     return this;
   }
   function transition(duration) {
-    var this$1 = this;
-
     if (typeof duration !== 'string') {
       duration = duration + "ms"; // eslint-disable-line
     }
     for (var i = 0; i < this.length; i += 1) {
-      var elStyle = this$1[i].style;
+      var elStyle = this[i].style;
       elStyle.webkitTransitionDuration = duration;
       elStyle.transitionDuration = duration;
     }
@@ -309,7 +294,6 @@
   }
   // Events
   function on() {
-    var this$1 = this;
     var assign;
 
     var args = [], len = arguments.length;
@@ -349,7 +333,7 @@
     var events = eventType.split(' ');
     var j;
     for (var i = 0; i < this.length; i += 1) {
-      var el = this$1[i];
+      var el = this[i];
       if (!targetSelector) {
         for (j = 0; j < events.length; j += 1) {
           var event = events[j];
@@ -378,7 +362,6 @@
     return this;
   }
   function off() {
-    var this$1 = this;
     var assign;
 
     var args = [], len = arguments.length;
@@ -397,7 +380,7 @@
     for (var i = 0; i < events.length; i += 1) {
       var event = events[i];
       for (var j = 0; j < this.length; j += 1) {
-        var el = this$1[j];
+        var el = this[j];
         var handlers = (void 0);
         if (!targetSelector && el.dom7Listeners) {
           handlers = el.dom7Listeners[event];
@@ -421,7 +404,6 @@
     return this;
   }
   function trigger() {
-    var this$1 = this;
     var args = [], len = arguments.length;
     while ( len-- ) args[ len ] = arguments[ len ];
 
@@ -430,7 +412,7 @@
     for (var i = 0; i < events.length; i += 1) {
       var event = events[i];
       for (var j = 0; j < this.length; j += 1) {
-        var el = this$1[j];
+        var el = this[j];
         var evt = (void 0);
         try {
           evt = new win.CustomEvent(event, {
@@ -515,8 +497,6 @@
     return {};
   }
   function css(props, value) {
-    var this$1 = this;
-
     var i;
     if (arguments.length === 1) {
       if (typeof props === 'string') {
@@ -525,7 +505,7 @@
         for (i = 0; i < this.length; i += 1) {
           // eslint-disable-next-line
           for (var prop in props) {
-            this$1[i].style[prop] = props[prop];
+            this[i].style[prop] = props[prop];
           }
         }
         return this;
@@ -533,7 +513,7 @@
     }
     if (arguments.length === 2 && typeof props === 'string') {
       for (i = 0; i < this.length; i += 1) {
-        this$1[i].style[props] = value;
+        this[i].style[props] = value;
       }
       return this;
     }
@@ -541,16 +521,14 @@
   }
   // Iterate over the collection passing elements to `callback`
   function each(callback) {
-    var this$1 = this;
-
     // Don't bother continuing without a callback
     if (!callback) { return this; }
     // Iterate over the current collection
     for (var i = 0; i < this.length; i += 1) {
       // If the callback returns false
-      if (callback.call(this$1[i], i, this$1[i]) === false) {
+      if (callback.call(this[i], i, this[i]) === false) {
         // End the loop early
-        return this$1;
+        return this;
       }
     }
     // Return `this` to allow chained DOM operations
@@ -558,21 +536,17 @@
   }
   // eslint-disable-next-line
   function html(html) {
-    var this$1 = this;
-
     if (typeof html === 'undefined') {
       return this[0] ? this[0].innerHTML : undefined;
     }
 
     for (var i = 0; i < this.length; i += 1) {
-      this$1[i].innerHTML = html;
+      this[i].innerHTML = html;
     }
     return this;
   }
   // eslint-disable-next-line
   function text(text) {
-    var this$1 = this;
-
     if (typeof text === 'undefined') {
       if (this[0]) {
         return this[0].textContent.trim();
@@ -581,7 +555,7 @@
     }
 
     for (var i = 0; i < this.length; i += 1) {
-      this$1[i].textContent = text;
+      this[i].textContent = text;
     }
     return this;
   }
@@ -641,7 +615,6 @@
     return new Dom7([this[index]]);
   }
   function append() {
-    var this$1 = this;
     var args = [], len = arguments.length;
     while ( len-- ) args[ len ] = arguments[ len ];
 
@@ -654,14 +627,14 @@
           var tempDiv = doc.createElement('div');
           tempDiv.innerHTML = newChild;
           while (tempDiv.firstChild) {
-            this$1[i].appendChild(tempDiv.firstChild);
+            this[i].appendChild(tempDiv.firstChild);
           }
         } else if (newChild instanceof Dom7) {
           for (var j = 0; j < newChild.length; j += 1) {
-            this$1[i].appendChild(newChild[j]);
+            this[i].appendChild(newChild[j]);
           }
         } else {
-          this$1[i].appendChild(newChild);
+          this[i].appendChild(newChild);
         }
       }
     }
@@ -669,8 +642,6 @@
     return this;
   }
   function prepend(newChild) {
-    var this$1 = this;
-
     var i;
     var j;
     for (i = 0; i < this.length; i += 1) {
@@ -678,14 +649,14 @@
         var tempDiv = doc.createElement('div');
         tempDiv.innerHTML = newChild;
         for (j = tempDiv.childNodes.length - 1; j >= 0; j -= 1) {
-          this$1[i].insertBefore(tempDiv.childNodes[j], this$1[i].childNodes[0]);
+          this[i].insertBefore(tempDiv.childNodes[j], this[i].childNodes[0]);
         }
       } else if (newChild instanceof Dom7) {
         for (j = 0; j < newChild.length; j += 1) {
-          this$1[i].insertBefore(newChild[j], this$1[i].childNodes[0]);
+          this[i].insertBefore(newChild[j], this[i].childNodes[0]);
         }
       } else {
-        this$1[i].insertBefore(newChild, this$1[i].childNodes[0]);
+        this[i].insertBefore(newChild, this[i].childNodes[0]);
       }
     }
     return this;
@@ -746,26 +717,22 @@
     return new Dom7(prevEls);
   }
   function parent(selector) {
-    var this$1 = this;
-
     var parents = []; // eslint-disable-line
     for (var i = 0; i < this.length; i += 1) {
-      if (this$1[i].parentNode !== null) {
+      if (this[i].parentNode !== null) {
         if (selector) {
-          if ($(this$1[i].parentNode).is(selector)) { parents.push(this$1[i].parentNode); }
+          if ($(this[i].parentNode).is(selector)) { parents.push(this[i].parentNode); }
         } else {
-          parents.push(this$1[i].parentNode);
+          parents.push(this[i].parentNode);
         }
       }
     }
     return $(unique(parents));
   }
   function parents(selector) {
-    var this$1 = this;
-
     var parents = []; // eslint-disable-line
     for (var i = 0; i < this.length; i += 1) {
-      var parent = this$1[i].parentNode; // eslint-disable-line
+      var parent = this[i].parentNode; // eslint-disable-line
       while (parent) {
         if (selector) {
           if ($(parent).is(selector)) { parents.push(parent); }
@@ -788,11 +755,9 @@
     return closest;
   }
   function find(selector) {
-    var this$1 = this;
-
     var foundElements = [];
     for (var i = 0; i < this.length; i += 1) {
-      var found = this$1[i].querySelectorAll(selector);
+      var found = this[i].querySelectorAll(selector);
       for (var j = 0; j < found.length; j += 1) {
         foundElements.push(found[j]);
       }
@@ -800,11 +765,9 @@
     return new Dom7(foundElements);
   }
   function children(selector) {
-    var this$1 = this;
-
     var children = []; // eslint-disable-line
     for (var i = 0; i < this.length; i += 1) {
-      var childNodes = this$1[i].childNodes;
+      var childNodes = this[i].childNodes;
 
       for (var j = 0; j < childNodes.length; j += 1) {
         if (!selector) {
@@ -817,10 +780,8 @@
     return new Dom7(unique(children));
   }
   function remove() {
-    var this$1 = this;
-
     for (var i = 0; i < this.length; i += 1) {
-      if (this$1[i].parentNode) { this$1[i].parentNode.removeChild(this$1[i]); }
+      if (this[i].parentNode) { this[i].parentNode.removeChild(this[i]); }
     }
     return this;
   }
@@ -2284,17 +2245,34 @@
 
     var prependSlides = [];
     var appendSlides = [];
+    var prependSlidesIndexes = [];
+    var appendSlidesIndexes = [];
     slides.each(function (index, el) {
       var slide = $(el);
-      if (index < swiper.loopedSlides) { appendSlides.push(el); }
-      if (index < slides.length && index >= slides.length - swiper.loopedSlides) { prependSlides.push(el); }
+      if (index < swiper.loopedSlides) {
+        appendSlides.push(el);
+        appendSlidesIndexes.push(index);
+      }
+      if (index < slides.length && index >= slides.length - swiper.loopedSlides) {
+        prependSlides.push(el);
+        prependSlidesIndexes.push(index);
+      }
       slide.attr('data-swiper-slide-index', index);
     });
+
     for (var i$1 = 0; i$1 < appendSlides.length; i$1 += 1) {
-      $wrapperEl.append($(appendSlides[i$1].cloneNode(true)).addClass(params.slideDuplicateClass));
+      if (params.loopClone && typeof params.loopClone === 'function') {
+        params.loopClone(appendSlidesIndexes[i$1]);
+      } else {
+        $wrapperEl.append($(appendSlides[i$1].cloneNode(true)).addClass(params.slideDuplicateClass));
+      }
     }
     for (var i$2 = prependSlides.length - 1; i$2 >= 0; i$2 -= 1) {
-      $wrapperEl.prepend($(prependSlides[i$2].cloneNode(true)).addClass(params.slideDuplicateClass));
+      if (params.loopClone && typeof params.loopClone === 'function') {
+        params.loopClone(prependSlidesIndexes[i$2], true);
+      } else {
+        $wrapperEl.prepend($(prependSlides[i$2].cloneNode(true)).addClass(params.slideDuplicateClass));
+      }
     }
   }
 
@@ -3672,7 +3650,7 @@
 
   var extendedDefaults = {};
 
-  var Swiper = (function (SwiperClass$$1) {
+  var Swiper = /*@__PURE__*/(function (SwiperClass$$1) {
     function Swiper() {
       var assign;
 

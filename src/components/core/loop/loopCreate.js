@@ -30,16 +30,33 @@ export default function () {
 
   const prependSlides = [];
   const appendSlides = [];
+  const prependSlidesIndexes = [];
+  const appendSlidesIndexes = [];
   slides.each((index, el) => {
     const slide = $(el);
-    if (index < swiper.loopedSlides) appendSlides.push(el);
-    if (index < slides.length && index >= slides.length - swiper.loopedSlides) prependSlides.push(el);
+    if (index < swiper.loopedSlides) {
+      appendSlides.push(el);
+      appendSlidesIndexes.push(index);
+    }
+    if (index < slides.length && index >= slides.length - swiper.loopedSlides) {
+      prependSlides.push(el);
+      prependSlidesIndexes.push(index);
+    }
     slide.attr('data-swiper-slide-index', index);
   });
+
   for (let i = 0; i < appendSlides.length; i += 1) {
-    $wrapperEl.append($(appendSlides[i].cloneNode(true)).addClass(params.slideDuplicateClass));
+    if (params.loopClone && typeof params.loopClone === 'function') {
+      params.loopClone(appendSlidesIndexes[i]);
+    } else {
+      $wrapperEl.append($(appendSlides[i].cloneNode(true)).addClass(params.slideDuplicateClass));
+    }
   }
   for (let i = prependSlides.length - 1; i >= 0; i -= 1) {
-    $wrapperEl.prepend($(prependSlides[i].cloneNode(true)).addClass(params.slideDuplicateClass));
+    if (params.loopClone && typeof params.loopClone === 'function') {
+      params.loopClone(prependSlidesIndexes[i], true);
+    } else {
+      $wrapperEl.prepend($(prependSlides[i].cloneNode(true)).addClass(params.slideDuplicateClass));
+    }
   }
 }

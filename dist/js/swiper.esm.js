@@ -1,13 +1,13 @@
 /**
- * Swiper 4.4.7
+ * Swiper 4.4.8
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
- * Copyright 2014-2019 Vladimir Kharlampidi
+ * Copyright 2014-2020 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: February 28, 2019
+ * Released on: January 8, 2020
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition, on, off, trigger, transitionEnd, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -1379,17 +1379,34 @@ function loopCreate () {
 
   const prependSlides = [];
   const appendSlides = [];
+  const prependSlidesIndexes = [];
+  const appendSlidesIndexes = [];
   slides.each((index$$1, el) => {
     const slide = $(el);
-    if (index$$1 < swiper.loopedSlides) appendSlides.push(el);
-    if (index$$1 < slides.length && index$$1 >= slides.length - swiper.loopedSlides) prependSlides.push(el);
+    if (index$$1 < swiper.loopedSlides) {
+      appendSlides.push(el);
+      appendSlidesIndexes.push(index$$1);
+    }
+    if (index$$1 < slides.length && index$$1 >= slides.length - swiper.loopedSlides) {
+      prependSlides.push(el);
+      prependSlidesIndexes.push(index$$1);
+    }
     slide.attr('data-swiper-slide-index', index$$1);
   });
+
   for (let i = 0; i < appendSlides.length; i += 1) {
-    $wrapperEl.append($(appendSlides[i].cloneNode(true)).addClass(params.slideDuplicateClass));
+    if (params.loopClone && typeof params.loopClone === 'function') {
+      params.loopClone(appendSlidesIndexes[i]);
+    } else {
+      $wrapperEl.append($(appendSlides[i].cloneNode(true)).addClass(params.slideDuplicateClass));
+    }
   }
   for (let i = prependSlides.length - 1; i >= 0; i -= 1) {
-    $wrapperEl.prepend($(prependSlides[i].cloneNode(true)).addClass(params.slideDuplicateClass));
+    if (params.loopClone && typeof params.loopClone === 'function') {
+      params.loopClone(prependSlidesIndexes[i], true);
+    } else {
+      $wrapperEl.prepend($(prependSlides[i].cloneNode(true)).addClass(params.slideDuplicateClass));
+    }
   }
 }
 
