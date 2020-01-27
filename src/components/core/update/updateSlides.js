@@ -109,11 +109,13 @@ export default function () {
       const slideStyles = window.getComputedStyle(slide[0], null);
       const currentTransform = slide[0].style.transform;
       const currentWebKitTransform = slide[0].style.webkitTransform;
-      if (currentTransform) {
-        slide[0].style.transform = 'none';
-      }
-      if (currentWebKitTransform) {
-        slide[0].style.webkitTransform = 'none';
+      if (params.effect !== 'float') {
+        if (currentTransform) {
+          slide[0].style.transform = 'none';
+        }
+        if (currentWebKitTransform) {
+          slide[0].style.webkitTransform = 'none';
+        }
       }
       if (params.roundLengths) {
         slideSize = swiper.isHorizontal()
@@ -122,11 +124,13 @@ export default function () {
       } else {
         // eslint-disable-next-line
         if (swiper.isHorizontal()) {
-          slideSize = slide[0].getBoundingClientRect().width
+          const width = params.effect === 'float' ? slide[0].offsetWidth : slide[0].getBoundingClientRect().width;
+          slideSize = width
             + parseFloat(slideStyles.getPropertyValue('margin-left'))
             + parseFloat(slideStyles.getPropertyValue('margin-right'));
         } else {
-          slideSize = slide[0].getBoundingClientRect().height
+          const height = params.effect === 'float' ? slide[0].offsetHeight : slide[0].getBoundingClientRect().height;
+          slideSize = height
             + parseFloat(slideStyles.getPropertyValue('margin-top'))
             + parseFloat(slideStyles.getPropertyValue('margin-bottom'));
         }

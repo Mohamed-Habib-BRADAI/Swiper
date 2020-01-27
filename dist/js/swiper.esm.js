@@ -1,5 +1,5 @@
 /**
- * Swiper 4.4.8
+ * Swiper 4.4.9
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: January 8, 2020
+ * Released on: January 27, 2020
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition, on, off, trigger, transitionEnd, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -522,11 +522,13 @@ function updateSlides () {
       const slideStyles = window$1.getComputedStyle(slide[0], null);
       const currentTransform = slide[0].style.transform;
       const currentWebKitTransform = slide[0].style.webkitTransform;
-      if (currentTransform) {
-        slide[0].style.transform = 'none';
-      }
-      if (currentWebKitTransform) {
-        slide[0].style.webkitTransform = 'none';
+      if (params.effect !== 'float') {
+        if (currentTransform) {
+          slide[0].style.transform = 'none';
+        }
+        if (currentWebKitTransform) {
+          slide[0].style.webkitTransform = 'none';
+        }
       }
       if (params.roundLengths) {
         slideSize = swiper.isHorizontal()
@@ -535,11 +537,13 @@ function updateSlides () {
       } else {
         // eslint-disable-next-line
         if (swiper.isHorizontal()) {
-          slideSize = slide[0].getBoundingClientRect().width
+          const width = params.effect === 'float' ? slide[0].offsetWidth : slide[0].getBoundingClientRect().width;
+          slideSize = width
             + parseFloat(slideStyles.getPropertyValue('margin-left'))
             + parseFloat(slideStyles.getPropertyValue('margin-right'));
         } else {
-          slideSize = slide[0].getBoundingClientRect().height
+          const height = params.effect === 'float' ? slide[0].offsetHeight : slide[0].getBoundingClientRect().height;
+          slideSize = height
             + parseFloat(slideStyles.getPropertyValue('margin-top'))
             + parseFloat(slideStyles.getPropertyValue('margin-bottom'));
         }
@@ -6778,16 +6782,28 @@ function getOffsetBounds(swiper) {
 }
 
 function getScale(index$$1, closestIndex, scale, offset$$1, offsetBounds, interpolate = false) {
-  if (index$$1 === closestIndex) {
-    if (offset$$1 < offsetBounds.small) {
-      return scale;
-    }
-    if (interpolate && offset$$1 < offsetBounds.intermediate) {
-      return scale - (((offset$$1 - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (scale - 1));
+  // scale > 1 => scale up centered
+  if (scale > 1) {
+    if (index$$1 === closestIndex) {
+      if (offset$$1 < offsetBounds.small) {
+        return scale;
+      }
+      if (interpolate && offset$$1 < offsetBounds.intermediate) {
+        return scale - (((offset$$1 - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (scale - 1));
+      }
     }
     return 1;
   }
-  return 1;
+  // scale <= 1 => scale down others
+  if (index$$1 === closestIndex) {
+    if (offset$$1 < offsetBounds.small) {
+      return 1;
+    }
+    if (interpolate && offset$$1 < offsetBounds.intermediate) {
+      return scale + (((offset$$1 - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (1 - scale));
+    }
+  }
+  return scale;
 }
 
 function getOpacity(index$$1, closestIndex, opacity, offset$$1, offsetBounds, interpolate = false) {
@@ -6885,7 +6901,7 @@ const Float = {
         });
       });
     }
-  }
+  },
 };
 
 var effectFloat = {
@@ -6895,14 +6911,14 @@ var effectFloat = {
       scale: 1.07,
       opacity: 0.5,
       slideWidth: 82,
-      spaceBetweenAsPercentage: false
+      spaceBetweenAsPercentage: false,
     },
   },
   create() {
     const swiper = this;
     Utils.extend(swiper, {
       floatEffect: {
-        setTranslate: Float.setTranslate.bind(swiper)
+        setTranslate: Float.setTranslate.bind(swiper),
       },
     });
   },
@@ -6930,9 +6946,6 @@ var effectFloat = {
       if (swiper.params.floatEffect.spaceBetweenAsPercentage) {
         swiper.params.spaceBetween = `${originalSpaceBetween}%`;
         swiper.originalParams.spaceBetween = `${originalSpaceBetween}%`;
-      } else {
-        swiper.params.spaceBetween = `${(100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2}%`;
-        swiper.originalParams.spaceBetween = `${(100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2}%`;
       }
 
       const oldStyles = document.getElementById('swiper-float-styles');
@@ -6958,6 +6971,9 @@ var effectFloat = {
       const swiper = this;
       if (swiper.params.effect !== 'float') return;
       swiper.floatEffect.setTranslate();
+    },
+    resize() {
+      console.log('resize');
     },
   },
 };

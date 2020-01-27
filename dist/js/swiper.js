@@ -1,5 +1,5 @@
 /**
- * Swiper 4.4.8
+ * Swiper 4.4.9
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: January 8, 2020
+ * Released on: January 27, 2020
  */
 
 (function (global, factory) {
@@ -1337,11 +1337,13 @@
         var slideStyles = win.getComputedStyle(slide[0], null);
         var currentTransform = slide[0].style.transform;
         var currentWebKitTransform = slide[0].style.webkitTransform;
-        if (currentTransform) {
-          slide[0].style.transform = 'none';
-        }
-        if (currentWebKitTransform) {
-          slide[0].style.webkitTransform = 'none';
+        if (params.effect !== 'float') {
+          if (currentTransform) {
+            slide[0].style.transform = 'none';
+          }
+          if (currentWebKitTransform) {
+            slide[0].style.webkitTransform = 'none';
+          }
         }
         if (params.roundLengths) {
           slideSize = swiper.isHorizontal()
@@ -1350,11 +1352,13 @@
         } else {
           // eslint-disable-next-line
           if (swiper.isHorizontal()) {
-            slideSize = slide[0].getBoundingClientRect().width
+            var width = params.effect === 'float' ? slide[0].offsetWidth : slide[0].getBoundingClientRect().width;
+            slideSize = width
               + parseFloat(slideStyles.getPropertyValue('margin-left'))
               + parseFloat(slideStyles.getPropertyValue('margin-right'));
           } else {
-            slideSize = slide[0].getBoundingClientRect().height
+            var height = params.effect === 'float' ? slide[0].offsetHeight : slide[0].getBoundingClientRect().height;
+            slideSize = height
               + parseFloat(slideStyles.getPropertyValue('margin-top'))
               + parseFloat(slideStyles.getPropertyValue('margin-bottom'));
           }
@@ -7744,16 +7748,28 @@
   function getScale(index, closestIndex, scale, offset, offsetBounds, interpolate) {
     if ( interpolate === void 0 ) interpolate = false;
 
-    if (index === closestIndex) {
-      if (offset < offsetBounds.small) {
-        return scale;
-      }
-      if (interpolate && offset < offsetBounds.intermediate) {
-        return scale - (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (scale - 1));
+    // scale > 1 => scale up centered
+    if (scale > 1) {
+      if (index === closestIndex) {
+        if (offset < offsetBounds.small) {
+          return scale;
+        }
+        if (interpolate && offset < offsetBounds.intermediate) {
+          return scale - (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (scale - 1));
+        }
       }
       return 1;
     }
-    return 1;
+    // scale <= 1 => scale down others
+    if (index === closestIndex) {
+      if (offset < offsetBounds.small) {
+        return 1;
+      }
+      if (interpolate && offset < offsetBounds.intermediate) {
+        return scale + (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (1 - scale));
+      }
+    }
+    return scale;
   }
 
   function getOpacity(index, closestIndex, opacity, offset, offsetBounds, interpolate) {
@@ -7860,7 +7876,7 @@
           });
         });
       }
-    }
+    },
   };
 
   var EffectFloat = {
@@ -7870,14 +7886,14 @@
         scale: 1.07,
         opacity: 0.5,
         slideWidth: 82,
-        spaceBetweenAsPercentage: false
+        spaceBetweenAsPercentage: false,
       },
     },
     create: function create() {
       var swiper = this;
       Utils.extend(swiper, {
         floatEffect: {
-          setTranslate: Float.setTranslate.bind(swiper)
+          setTranslate: Float.setTranslate.bind(swiper),
         },
       });
     },
@@ -7905,9 +7921,6 @@
         if (swiper.params.floatEffect.spaceBetweenAsPercentage) {
           swiper.params.spaceBetween = originalSpaceBetween + "%";
           swiper.originalParams.spaceBetween = originalSpaceBetween + "%";
-        } else {
-          swiper.params.spaceBetween = ((100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2) + "%";
-          swiper.originalParams.spaceBetween = ((100 - (swiper.params.floatEffect.slideWidth * swiper.params.floatEffect.scale)) / 2) + "%";
         }
 
         var oldStyles = document.getElementById('swiper-float-styles');
@@ -7933,6 +7946,9 @@
         var swiper = this;
         if (swiper.params.effect !== 'float') { return; }
         swiper.floatEffect.setTranslate();
+      },
+      resize: function resize() {
+        console.log('resize');
       },
     },
   };
