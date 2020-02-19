@@ -1,5 +1,5 @@
 /**
- * Swiper 4.4.9
+ * Swiper 4.4.10
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
@@ -7,7 +7,7 @@
  *
  * Released under the MIT License
  *
- * Released on: January 27, 2020
+ * Released on: February 19, 2020
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition, on, off, trigger, transitionEnd, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -6800,7 +6800,7 @@ function getScale(index$$1, closestIndex, scale, offset$$1, offsetBounds, interp
       return 1;
     }
     if (interpolate && offset$$1 < offsetBounds.intermediate) {
-      return scale + (((offset$$1 - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (1 - scale));
+      return 1 - (((offset$$1 - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (1 - scale));
     }
   }
   return scale;
@@ -6888,7 +6888,11 @@ const Float = {
         slides.forEach((slide, index$$1) => {
           const {scale, opacity} = styles$$1[index$$1];
           if (index$$1 === closestIndex) {
-            slide.transform(`scale(${scale + ((params.scale - scale) * progress)}) translateZ(0)`);
+            if (params.scale > 1) {
+              slide.transform(`scale(${scale + ((params.scale - scale) * progress)}) translateZ(0)`);
+            } else {
+              slide.transform(`scale(${scale + ((1 - scale) * progress)}) translateZ(0)`);
+            }
             slide.css('opacity', opacity + ((1 - opacity) * progress));
           } else {
             if (scale > 1) {
@@ -6971,10 +6975,7 @@ var EffectFloat = {
       const swiper = this;
       if (swiper.params.effect !== 'float') return;
       swiper.floatEffect.setTranslate();
-    },
-    resize() {
-      console.log('resize');
-    },
+    }
   },
 };
 

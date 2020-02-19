@@ -32,7 +32,7 @@ function getScale(index, closestIndex, scale, offset, offsetBounds, interpolate 
       return 1;
     }
     if (interpolate && offset < offsetBounds.intermediate) {
-      return scale + (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (1 - scale));
+      return 1 - (((offset - offsetBounds.small) / (offsetBounds.intermediate - offsetBounds.small)) * (1 - scale));
     }
   }
   return scale;
@@ -120,7 +120,11 @@ const Float = {
         slides.forEach((slide, index) => {
           const {scale, opacity} = styles[index];
           if (index === closestIndex) {
-            slide.transform(`scale(${scale + ((params.scale - scale) * progress)}) translateZ(0)`);
+            if (params.scale > 1) {
+              slide.transform(`scale(${scale + ((params.scale - scale) * progress)}) translateZ(0)`);
+            } else {
+              slide.transform(`scale(${scale + ((1 - scale) * progress)}) translateZ(0)`);
+            }
             slide.css('opacity', opacity + ((1 - opacity) * progress));
           } else {
             if (scale > 1) {
@@ -203,10 +207,6 @@ export default {
       const swiper = this;
       if (swiper.params.effect !== 'float') return;
       swiper.floatEffect.setTranslate();
-    },
-    resize() {
-      const swiper = this;
-      console.log('resize');
-    },
+    }
   },
 };
