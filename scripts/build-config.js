@@ -4,7 +4,7 @@ module.exports = {
     // 'keyboard',
     // 'mousewheel',
     'navigation',
-    // 'pagination',
+    'pagination',
     // 'scrollbar',
     // 'parallax',
     // 'zoom',
