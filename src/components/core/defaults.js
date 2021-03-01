@@ -60,6 +60,7 @@ export default {
   touchAngle: 45,
   simulateTouch: true,
   shortSwipes: true,
+  shortSwipesRatio: 0,
   longSwipes: true,
   longSwipesRatio: 0.5,
   longSwipesMs: 300,

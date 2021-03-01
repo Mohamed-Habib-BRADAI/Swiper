@@ -255,7 +255,7 @@ export default function (event) {
     }
   } else {
     // Short swipes
-    if (!params.shortSwipes) {
+    if (!params.shortSwipes || ratio < params.shortSwipesRatio) {
       swiper.slideTo(swiper.activeIndex);
       return;
     }

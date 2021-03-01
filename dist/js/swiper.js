@@ -1,13 +1,13 @@
 /**
- * Swiper 4.4.12
+ * Swiper 4.4.13
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
- * Copyright 2014-2020 Vladimir Kharlampidi
+ * Copyright 2014-2021 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: October 21, 2020
+ * Released on: March 1, 2021
  */
 
 (function (global, factory) {
@@ -3139,7 +3139,7 @@
       }
     } else {
       // Short swipes
-      if (!params.shortSwipes) {
+      if (!params.shortSwipes || ratio < params.shortSwipesRatio) {
         swiper.slideTo(swiper.activeIndex);
         return;
       }
@@ -3569,6 +3569,7 @@
     touchAngle: 45,
     simulateTouch: true,
     shortSwipes: true,
+    shortSwipesRatio: 0,
     longSwipes: true,
     longSwipesRatio: 0.5,
     longSwipesMs: 300,
