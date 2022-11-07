@@ -31,7 +31,7 @@ export default {
     destroy() {
       const swiper = this;
       window.removeEventListener('resize', swiper.resize.resizeHandler);
-      window.removeEventListener('orientationchange', swiper.resize.orientationChangeHandler);
+      // window.removeEventListener('orientationchange', swiper.resize.orientationChangeHandler);
     },
   },
 };

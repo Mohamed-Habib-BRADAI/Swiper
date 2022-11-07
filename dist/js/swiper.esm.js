@@ -3,11 +3,11 @@
  * Most modern mobile touch slider and framework with hardware accelerated transitions
  * http://www.idangero.us/swiper/
  *
- * Copyright 2014-2021 Vladimir Kharlampidi
+ * Copyright 2014-2022 Vladimir Kharlampidi
  *
  * Released under the MIT License
  *
- * Released on: March 1, 2021
+ * Released on: November 7, 2022
  */
 
 import { $, addClass, removeClass, hasClass, toggleClass, attr, removeAttr, data, transform, transition, on, off, trigger, transitionEnd, outerWidth, outerHeight, offset, css, each, html, text, is, index, eq, append, prepend, next, nextAll, prev, prevAll, parent, parents, closest, find, children, remove, add, styles } from 'dom7/dist/dom7.modular';
@@ -3232,7 +3232,7 @@ var Resize = {
       window$1.addEventListener('resize', swiper.resize.resizeHandler);
 
       // Emit orientationchange
-      window$1.addEventListener('orientationchange', swiper.resize.orientationChangeHandler);
+      // window.addEventListener('orientationchange', swiper.resize.orientationChangeHandler);
     },
     destroy() {
       const swiper = this;

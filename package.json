@@ -82,5 +82,8 @@
   "dependencies": {
     "dom7": "^2.1.2",
     "ssr-window": "^1.0.1"
+  },
+  "overrides": {
+    "graceful-fs": "^4.2.10"
   }
 }
